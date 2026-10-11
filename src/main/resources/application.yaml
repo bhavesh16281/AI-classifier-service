@@ -3,7 +3,7 @@ spring:
     name: ai-classifier-service
   ai:
     openai:
-      api-key: PLACEHOLDER
+      api-key: 
       base-url: https://api.groq.com/openai
       chat:
         options:
