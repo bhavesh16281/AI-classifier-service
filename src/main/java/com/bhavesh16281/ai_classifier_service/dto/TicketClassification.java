@@ -14,7 +14,10 @@ public record TicketClassification(
     String priority,
 
     @JsonPropertyDescription("The support team best suited to handle this ticket. One of: BILLING_TEAM, TECHNICAL_SUPPORT, ACCOUNT_MANAGEMENT, FEATURE_TEAM, GENERAL_SUPPORT")
-    String supportTeam
+    String supportTeam,
+
+    @JsonPropertyDescription ("LLM must give a small suggestion on how to fix this issue before going to the support team and the length of the suggestion must be below 250 characters")
+    String suggestion
 ) {
     
 }

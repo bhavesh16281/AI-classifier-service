@@ -4,10 +4,10 @@ spring:
   ai:
     openai:
       api-key: ${GROQ_API_KEY}
-      base-url: https://api.groq.com/openai
+      base-url: https://api.groq.com/openai/v1
       chat:
         options:
-          model: llama-3.3-70b-versatile
+          model: openai/gpt-oss-120b
     model:
       embedding: none
 server:
