@@ -78,5 +78,18 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AiProviderException.class)
+    public ResponseEntity<ApiError> handleAiProviderException(AiProviderException ex, HttpServletRequest request) {
+
+        ApiError apiError = new ApiError(
+                Instant.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     
 }

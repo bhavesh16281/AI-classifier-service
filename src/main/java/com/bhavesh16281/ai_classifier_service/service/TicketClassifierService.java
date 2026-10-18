@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.bhavesh16281.ai_classifier_service.dto.ClassifyRequest;
 import com.bhavesh16281.ai_classifier_service.dto.TicketClassification;
+import com.bhavesh16281.ai_classifier_service.exception.AiProviderException;
+
+import io.github.resilience4j.retry.annotation.Retry;
 
 @Service 
 public class TicketClassifierService {
@@ -36,6 +39,7 @@ public class TicketClassifierService {
         this.chatClient = chatClient.build();
     }
 
+    @Retry(name = "groq-classify")
     public TicketClassification classify(ClassifyRequest request) {
 
         Prompt prompt = CLASSIFY_TEMPLATE.create(Map.of(
@@ -43,6 +47,21 @@ public class TicketClassifierService {
             "description", request.description()
         ));
         
-        return chatClient.prompt(prompt).call().entity(TicketClassification.class);
+        try{
+
+            TicketClassification classification = chatClient.prompt(prompt).call().entity(TicketClassification.class);
+
+            if (classification == null) {
+                throw new AiProviderException("Classification failed: result is null");
+            }
+
+            return classification;
+        }catch(AiProviderException e){
+            System.out.println("Classification failed: " + e.getMessage());
+            throw e;
+        }catch(Exception e){
+            System.out.println("Classification failed: " + e.getMessage());
+            throw new AiProviderException("Failed to classify ticket", e);
+        }       
     }
 }

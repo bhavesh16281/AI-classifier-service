@@ -18,3 +18,19 @@ management:
     web:
       exposure:
         include: "*"
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+resilience4j:
+  retry:
+    instances:
+      groq-classify:
+        max-attempts: 3
+        wait-duration: 500ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - com.bhavesh16281.ai_classifier_service.exception.AiProviderException
